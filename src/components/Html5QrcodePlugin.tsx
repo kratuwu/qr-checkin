@@ -4,11 +4,8 @@ import {
   QrcodeErrorCallback,
   Html5QrcodeScanner,
 } from "html5-qrcode";
-import {
-  Html5Qrcode,
-  Html5QrcodeCameraScanConfig,
-} from "html5-qrcode/esm/html5-qrcode";
-import { useEffect, useRef } from "react";
+import { Html5QrcodeCameraScanConfig } from "html5-qrcode/esm/html5-qrcode";
+import { useEffect } from "react";
 
 const qrcodeRegionId = "html5qr-code-full-region";
 
@@ -42,19 +39,39 @@ const createConfig = (props: Props): Html5QrcodeCameraScanConfig => {
 };
 
 const Html5QrcodePlugin = (props: Props) => {
-//   const previewRef = useRef<HTMLDivElement>(null);
-//   const memoizedResultHandler = useRef(props.qrCodeSuccessCallback);
-//   const memoizedErrorHandler = useRef(props.qrCodeErrorCallback);
+  //     const previewRef = useRef<HTMLDivElement>(null);
+  //     const memoizedResultHandler = useRef(props.qrCodeSuccessCallback);
+  //     const memoizedErrorHandler = useRef(props.qrCodeErrorCallback);
+  //     const config = createConfig(props);
+  //     useEffect(() => {
+  //       memoizedResultHandler.current = props.qrCodeSuccessCallback;
+  //     }, [props.qrCodeSuccessCallback]);
 
-//   useEffect(() => {
-//     memoizedResultHandler.current = props.qrCodeSuccessCallback;
-//   }, [props.qrCodeSuccessCallback]);
+  //     useEffect(() => {
+  //       memoizedErrorHandler.current = props.qrCodeErrorCallback;
+  //     }, [props.qrCodeErrorCallback]);
 
-//   useEffect(() => {
-//     memoizedErrorHandler.current = props.qrCodeErrorCallback;
-//   }, [props.qrCodeErrorCallback]);
+  //     useEffect(() => {
+  //       const html5QrcodeScanner = new Html5Qrcode(previewRef?.current?.id);
+  //       const didStart = html5QrcodeScanner
+  //         .start(
+  //           { facingMode: "environment" },
+  //           config,
+  //           memoizedResultHandler.current,
+  //           memoizedErrorHandler.current
+  //         )
+  //         .then(() => false);
+  //       return () => {
+  //         didStart
+  //           .then(() => html5QrcodeScanner.stop())
+  //           .catch(() => {
+  //             console.log("Error stopping scanner");
+  //           });
+  //       };
+  //     }, [previewRef, memoizedResultHandler, memoizedErrorHandler]);
+  //   return <div id={"preview"} ref={previewRef} />;
+
   useEffect(() => {
-    // if (!previewRef.current) return;
     // when component mounts
     const config = createConfig(props);
     const verbose = props.verbose === true;
@@ -78,26 +95,9 @@ const Html5QrcodePlugin = (props: Props) => {
         console.error("Failed to clear html5QrcodeScanner. ", error);
       });
     };
-//     const html5QrcodeScanner = new Html5Qrcode(previewRef.current.id);
-//     const didStart = html5QrcodeScanner
-//       .start(
-//         { facingMode: "environment" },
-//         config,
-//         memoizedResultHandler.current,
-//         memoizedErrorHandler.current
-//       )
-//       .then(() => true);
-//     return () => {
-//       didStart
-//         .then(() => html5QrcodeScanner.stop())
-//         .catch(() => {
-//           console.log("Error stopping scanner");
-//         });
-//     };
-//   }, [previewRef, memoizedResultHandler, memoizedErrorHandler]);
-  },[]);
+  }, []);
 
-  return <div id={qrcodeRegionId}/>;
+  return <div id={qrcodeRegionId} />;
 };
 
 export default Html5QrcodePlugin;

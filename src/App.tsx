@@ -1,27 +1,21 @@
-import { useState } from "react";
 import "./App.css";
-import { Html5QrcodeResult } from "html5-qrcode";
-import Html5QrcodePlugin from "./Html5QrcodePlugin";
+import { BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Scan from "./pages/Scan";
+import Login from "./pages/Login";
 
 function App() {
-  const [found, setFound] = useState("nothing");
-  const onNewScanResult = (decodedText: string, result: Html5QrcodeResult) => {
-    setFound(decodedText);
-    // handle decoded results here
-  };
-
   return (
-    <>
-      <h1>found {found}</h1>
+    <Router>
       <div>
-      <Html5QrcodePlugin
-        fps={10}
-        qrbox={250}
-        disableFlip={false}
-        qrCodeSuccessCallback={onNewScanResult}
-      />
+        <section>
+          <Routes>
+            <Route path="/" element={<Scan />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </section>
       </div>
-    </>
+    </Router>
   );
 }
 
