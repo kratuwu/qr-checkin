@@ -11,6 +11,7 @@ const ScanPage = () => {
   const navigate = useNavigate();
   const onNewScanResult = (decodedText: string, result: Html5QrcodeResult) => {
     setFound(decodedText);
+    console.log(result)
     // handle decoded results here
   };
   useEffect(() => {
@@ -24,6 +25,7 @@ const ScanPage = () => {
         console.log("Signed out successfully");
       })
       .catch((error) => {
+        console.log(error)
         // An error happened.
       });
   };
