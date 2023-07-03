@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
 import Html5QrcodePlugin from "../components/Html5QrcodePlugin";
 import { db, auth } from "../firebaseInit";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  DocumentData,
+  DocumentSnapshot,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { Html5QrcodeResult } from "html5-qrcode";
 import { useNavigate } from "react-router-dom";
 
 const ScanPage = () => {
-  const [found, setFound] = useState("nothing");
   const navigate = useNavigate();
-  const onNewScanResult = (decodedText: string, result: Html5QrcodeResult) => {
-    setFound(decodedText);
-    console.log(result)
+  const [uid, setUid] = useState<string>("");
+  const onNewScanResult = async (decodedText: string) => {
+    const audience = await findAudience(decodedText);
+    if (audience.exists()) {
+      checkin(audience);
+    }
     // handle decoded results here
   };
-  useEffect(() => {
-    findAudience("ZzD8nQqQJtuZqYCc3dKF");
-  }, []);
+
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -25,10 +30,11 @@ const ScanPage = () => {
         console.log("Signed out successfully");
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         // An error happened.
       });
   };
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -36,7 +42,7 @@ const ScanPage = () => {
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
         // ...
-        console.log("uid", uid);
+        setUid(uid);
       } else {
         handleLogout();
         // User is signed out
@@ -45,14 +51,19 @@ const ScanPage = () => {
       }
     });
   }, []);
-  const findAudience = async (id: string) => {
+
+  const findAudience = async (
+    id: string
+  ): Promise<DocumentSnapshot<DocumentData>> => {
     const audienceRef = doc(db, "audience", id);
-    const docSnap = await getDoc(audienceRef);
-    console.log(docSnap.data());
+    return await getDoc(audienceRef);
+  };
+
+  const checkin = async (doc: DocumentSnapshot<DocumentData>) => {
+    updateDoc(doc.ref, { checkin: true, staffId: uid });
   };
   return (
     <div>
-      <h1>found {found}</h1>
       <div>
         <Html5QrcodePlugin
           fps={10}
