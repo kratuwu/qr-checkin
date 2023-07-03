@@ -37,7 +37,6 @@ const createConfig = (props: Props): Html5QrcodeCameraScanConfig => {
 const Html5QrcodePlugin = (props: Props) => {
   const [html5QrcodeScanner, setHtml5QrcodeScanner] =
     useState<Html5QrcodeScanner | null>(null);
-  const [isPause, setIsPause] = useState(false);
   useEffect(() => {
     // when component mounts
     const config = createConfig(props);
