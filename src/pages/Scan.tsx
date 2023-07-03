@@ -84,7 +84,6 @@ const ScanPage = () => {
       ) : (
         <CheckinModal show={isShowModal} callback={modalCalback} />
       )}
-      <h1>{uid}</h1>
       <Html5QrcodePlugin
         fps={10}
         qrbox={250}
