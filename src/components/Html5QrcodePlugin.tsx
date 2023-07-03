@@ -53,7 +53,7 @@ const Html5QrcodePlugin = (props: Props) => {
   const onSuccuccess = (decodedText: string): void => {
     console.log(decodedText)
     props.qrCodeSuccessCallback(decodedText);
-    html5QrcodeScanner?.pause(isPause);
+    html5QrcodeScanner?.pause(true);
   };
 
   useEffect(() => {
