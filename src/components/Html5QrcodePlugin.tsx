@@ -11,6 +11,7 @@ type Props = {
   aspectRatio?: number;
   disableFlip: boolean;
   verbose?: boolean;
+  pause?: boolean;
   qrCodeSuccessCallback: (text: string) => void;
   qrCodeErrorCallback?: QrcodeErrorCallback;
 };
@@ -50,10 +51,16 @@ const Html5QrcodePlugin = (props: Props) => {
     );
   }, []);
 
+  useEffect(() => {
+    if (props.pause) {
+      html5QrcodeScanner?.pause();
+    } else {
+      html5QrcodeScanner?.resume();
+    }
+  }, [props.pause]);
+
   const onSuccuccess = (decodedText: string): void => {
-    console.log(decodedText)
     props.qrCodeSuccessCallback(decodedText);
-    html5QrcodeScanner?.pause(true);
   };
 
   useEffect(() => {

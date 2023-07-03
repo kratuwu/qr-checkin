@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Html5QrcodePlugin from "../components/Html5QrcodePlugin";
 import { db, auth } from "../firebaseInit";
 import {
@@ -10,16 +10,30 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
+import CheckinModal from "../components/CheckinModal";
 
 const ScanPage = () => {
   const navigate = useNavigate();
-  const [uid, setUid] = useState<string>("");
+  const [uid, setUid] = useState<string>("test");
+  const stateRef = useRef("");
+  stateRef.current = uid;
+  const [isLoading, setIsLoading] = useState(false);
+  const [isShowModal, setIsShowModal] = useState(false);
+  const [ispauseScan, setIsPauseScan] = useState(false);
   const onNewScanResult = async (decodedText: string) => {
+    setIsShowModal(false);
+    setIsLoading(true);
+    setIsPauseScan(true);
     const audience = await findAudience(decodedText);
     if (audience.exists()) {
-      checkin(audience);
+      checkin(audience).then(() => {
+        setIsLoading(false);
+        setIsShowModal(true);
+      });
+    } else {
+      setIsLoading(false);
     }
-    // handle decoded results here
   };
 
   const handleLogout = () => {
@@ -27,7 +41,6 @@ const ScanPage = () => {
       .then(() => {
         // Sign-out successful.
         navigate("/login");
-        console.log("Signed out successfully");
       })
       .catch((error) => {
         console.log(error);
@@ -36,20 +49,18 @@ const ScanPage = () => {
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const listener = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
-        const uid = user.uid;
-        // ...
-        setUid(uid);
+        setUid(user.uid);
       } else {
         handleLogout();
-        // User is signed out
-        // ...
-        console.log("user is logged out");
       }
     });
+    return () => {
+      listener();
+    };
   }, []);
 
   const findAudience = async (
@@ -59,20 +70,29 @@ const ScanPage = () => {
     return await getDoc(audienceRef);
   };
 
-  const checkin = async (doc: DocumentSnapshot<DocumentData>) => {
-    updateDoc(doc.ref, { checkin: true, staffId: uid });
+  const checkin = (doc: DocumentSnapshot<DocumentData>) => {
+    return updateDoc(doc.ref, { checkin: true, staffId: uid });
+  };
+
+  const modalCalback = () => {
+    setIsPauseScan(false);
   };
   return (
-    <div>
-      <div>
-        <Html5QrcodePlugin
-          fps={10}
-          qrbox={250}
-          disableFlip={false}
-          qrCodeSuccessCallback={onNewScanResult}
-        />
-      </div>
-    </div>
+    <>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <CheckinModal show={isShowModal} callback={modalCalback} />
+      )}
+      <h1>{uid}</h1>
+      <Html5QrcodePlugin
+        fps={10}
+        qrbox={250}
+        disableFlip={false}
+        pause={ispauseScan}
+        qrCodeSuccessCallback={onNewScanResult}
+      />
+    </>
   );
 };
 
