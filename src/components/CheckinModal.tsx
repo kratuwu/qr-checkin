@@ -5,6 +5,7 @@ import Modal from "react-bootstrap/Modal";
 type Props = {
   show: boolean;
   callback: () => void;
+  message: string;
 };
 
 const CheckinModal = (props: Props) => {
@@ -22,7 +23,7 @@ const CheckinModal = (props: Props) => {
   return (
     <Modal show={show} size="sm" onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Checkin Success</Modal.Title>
+        <Modal.Title>{props.message}</Modal.Title>
       </Modal.Header>
       <Modal.Footer>
         <Button onClick={handleClose}>Done</Button>
