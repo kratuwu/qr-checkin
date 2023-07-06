@@ -34,21 +34,12 @@ const Login = () => {
   return (
     <>
       <main>
-        <section>
-          <div>
-            <p> FocusApp </p>
-
-            <form>
-              <a
-                className="btn btn-block btn-social btn-google"
-                onClick={handleGoogle}
-              >
-                <span className="fa fa-google"></span>
-                Sign in with Google
-              </a>
-            </form>
-          </div>
-        </section>
+        <h1> QR Checkin </h1>
+        <div className="g_body">
+          <button type="button" className="login-with-google-btn" onClick={handleGoogle}>
+            Sign in with Google
+          </button>
+        </div>
       </main>
     </>
   );

@@ -15,7 +15,7 @@ import CheckinModal from "../components/CheckinModal";
 
 const ScanPage = () => {
   const navigate = useNavigate();
-  const [uid, setUid] = useState<string>("test");
+  const [uid, setUid] = useState<string>("");
   const stateRef = useRef("");
   stateRef.current = uid;
   const [isLoading, setIsLoading] = useState(false);
