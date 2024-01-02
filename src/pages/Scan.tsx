@@ -95,13 +95,15 @@ const ScanPage = () => {
           message={modalMessage}
         />
       )}
-      <Html5QrcodePlugin
-        fps={10}
-        qrbox={250}
-        disableFlip={false}
-        pause={ispauseScan}
-        qrCodeSuccessCallback={onNewScanResult}
-      />
+      <>
+        <Html5QrcodePlugin
+          fps={10}
+          qrbox={250}
+          disableFlip={false}
+          pause={ispauseScan}
+          qrCodeSuccessCallback={onNewScanResult}
+          />
+      </>
     </div>
   );
 };
