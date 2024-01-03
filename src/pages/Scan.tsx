@@ -85,7 +85,7 @@ const ScanPage = () => {
     setIsShowModal(false);
   };
   return (
-    <div className="w-75 mx-auto my-0 p-5 text-center">
+    <>
       {isLoading ? (
         <Spinner />
       ) : (
@@ -95,7 +95,6 @@ const ScanPage = () => {
           message={modalMessage}
         />
       )}
-      <>
         <Html5QrcodePlugin
           fps={10}
           qrbox={250}
@@ -103,8 +102,7 @@ const ScanPage = () => {
           pause={ispauseScan}
           qrCodeSuccessCallback={onNewScanResult}
           />
-      </>
-    </div>
+    </>
   );
 };
 
